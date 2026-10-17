@@ -17,12 +17,6 @@ neorg.setup {
     ["core.concealer"] = {},
     ["core.neorgcmd"] = {},
     ["core.integrations.treesitter"] = {},
-    ["core.mode"] = {
-      config = {
-        current_mode = "norg",
-        previous_mode = "norg",
-      },
-    },
     ["core.presenter"] = {
       config = {
         zen_mode = "zen-mode",

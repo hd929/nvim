@@ -16,20 +16,11 @@ neoscroll.setup {
   -- post_hook = nil, -- Function to run after the scrolling animation ends
 }
 
-local t = {}
--- Syntax: t[keys] = {function, {function arguments}}
--- t['<C-u>'] = {'scroll', {'-vim.wo.scroll', 'true', '250'}}
--- t['<C-d>'] = {'scroll', { 'vim.wo.scroll', 'true', '250'}}
--- t['<C-b>'] = {'scroll', {'-vim.api.nvim_win_get_height(0)', 'true', '450'}}
--- t['<C-f>'] = {'scroll', { 'vim.api.nvim_win_get_height(0)', 'true', '450'}}
--- t['<C-y>'] = {'scroll', {'-0.10', 'false', '100'}}
--- t['<C-e>'] = {'scroll', { '0.10', 'false', '100'}}
--- t['H'] = {'scroll', {'-0.10', 'true', '100'}}
--- t['L'] = {'scroll', { '0.10', 'true', '100'}}
-t["<c-k>"] = { "scroll", { "-vim.wo.scroll", "true", "250" } }
-t["<c-j>"] = { "scroll", { "vim.wo.scroll", "true", "250" } }
--- t['zt']    = {'zt', {'250'}}
--- t['zz']    = {'zz', {'250'}}
--- t['zb']    = {'zb', {'250'}}
-
-require("neoscroll.config").set_mappings(t)
+local keymap = {
+  ["<C-k>"] = function() neoscroll.scroll(-vim.wo.scroll, { move_cursor = true, duration = 250 }) end,
+  ["<C-j>"] = function() neoscroll.scroll(vim.wo.scroll, { move_cursor = true, duration = 250 }) end,
+}
+local modes = { "n", "v", "x" }
+for key, func in pairs(keymap) do
+  vim.keymap.set(modes, key, func)
+end

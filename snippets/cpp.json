@@ -1,0 +1,36 @@
+{
+  "VOI C++ Competitive Programming Template": {
+    "prefix": ["cpp", "voi", "template"],
+    "body": [
+      "#include <bits/stdc++.h>",
+      "using namespace std;",
+      "",
+      "#define ll long long",
+      "#define pii pair<int, int>",
+      "#define all(x) (x).begin(), (x).end()",
+      "#define fi first",
+      "#define se second",
+      "",
+      "void solve() {",
+      "    $0",
+      "}",
+      "",
+      "int main() {",
+      "    ios_base::sync_with_stdio(false);",
+      "    cin.tie(NULL);",
+      "    #ifndef ONLINE_JUDGE",
+      "    // freopen(\"input.txt\", \"r\", stdin);",
+      "    // freopen(\"output.txt\", \"w\", stdout);",
+      "    #endif",
+      "",
+      "    int t = 1;",
+      "    // cin >> t;",
+      "    while (t--) {",
+      "        solve();",
+      "    }",
+      "    return 0;",
+      "}"
+    ],
+    "description": "VOI / CP Standard Template"
+  }
+}

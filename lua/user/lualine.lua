@@ -405,7 +405,7 @@ local lanuage_server = {
       end
     end
 
-    local clients = vim.lsp.buf_get_clients()
+    local clients = vim.lsp.get_clients and vim.lsp.get_clients({ bufnr = 0 }) or vim.lsp.buf_get_clients()
     local client_names = {}
     local copilot_active = false
 
@@ -473,6 +473,15 @@ local location = {
   end,
   padding = 0,
 }
+
+local ok_gb, git_branch = pcall(require, "lualine.components.branch.git_branch")
+if ok_gb and git_branch then
+  local orig_find = git_branch.find_git_dir
+  git_branch.find_git_dir = function(...)
+    if not package or not package.loaded then return nil end
+    return orig_find(...)
+  end
+end
 
 lualine.setup {
   options = {

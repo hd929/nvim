@@ -105,5 +105,5 @@ telescope.setup {
   },
 }
 
-telescope.load_extension "notify"
-telescope.load_extension "fzf"
+pcall(telescope.load_extension, "notify")
+pcall(telescope.load_extension, "fzf")

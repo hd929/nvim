@@ -80,3 +80,22 @@ keymap("n", "<F2>", '<cmd>lua require("renamer").rename()<cr>', opts)
 -- Custom
 keymap("n", "<C-z>", "<cmd>ZenMode<cr>", opts)
 keymap("n", "-", ":lua require'lir.float'.toggle()<cr>", opts)
+
+-- Fast C/C++ Compile & Run (<F5>)
+local function run_cpp()
+  local file = vim.fn.expand "%"
+  local ext = vim.fn.expand "%:e"
+  local fnoext = vim.fn.expand "%:r"
+  if ext == "cpp" or ext == "c" then
+    vim.cmd "write"
+    local compiler = ext == "cpp" and "g++" or "gcc"
+    local std = ext == "cpp" and "-std=c++20" or "-std=c11"
+    local cmd = string.format('%s -O2 %s -Wall -Wextra -Wshadow -Wl,--stack,268435456 -static "%s" -o "%s.exe" ; if ($?) { & "./%s.exe" }', compiler, std, file, fnoext, fnoext)
+    require("toggleterm").exec(cmd, 1, 15, nil, "horizontal")
+  else
+    vim.notify("Not a C/C++ file: " .. ext, vim.log.levels.WARN)
+  end
+end
+
+vim.keymap.set("n", "<F5>", run_cpp, { noremap = true, silent = true, desc = "Compile & Run C++" })
+

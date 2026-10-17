@@ -43,22 +43,17 @@ M.setup = function()
 
   vim.diagnostic.config(config)
 
-  vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, {
-    border = "rounded",
-  })
+  local orig_hover = vim.lsp.handlers["textDocument/hover"]
+  vim.lsp.handlers["textDocument/hover"] = function(err, result, ctx, hconfig)
+    hconfig = vim.tbl_extend("force", { border = "rounded" }, hconfig or {})
+    return orig_hover(err, result, ctx, hconfig)
+  end
 
-  vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.handlers.signature_help, {
-    border = "rounded",
-  })
-
-  vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(vim.lsp.diagnostic.on_publish_diagnostics, {
-    underline = true,
-    virtual_text = {
-      spacing = 5,
-      severity_limit = "Warning",
-    },
-    update_in_insert = true,
-  })
+  local orig_sig = vim.lsp.handlers["textDocument/signatureHelp"]
+  vim.lsp.handlers["textDocument/signatureHelp"] = function(err, result, ctx, sconfig)
+    sconfig = vim.tbl_extend("force", { border = "rounded" }, sconfig or {})
+    return orig_sig(err, result, ctx, sconfig)
+  end
 end
 
 local function attach_navic(client, bufnr)
@@ -105,11 +100,15 @@ M.on_attach = function(client, bufnr)
     client.server_capabilities.documentFormattingProvider = false
   end
 
-  local status_ok, illuminate = pcall(require, "illuminate")
-  if not status_ok then
-    return
+  if client.server_capabilities.inlayHintProvider and vim.lsp.inlay_hint then
+    vim.lsp.inlay_hint.enable(true, { bufnr = bufnr })
   end
-  illuminate.on_attach(client)
+
+  if client.name == "clangd" then
+    vim.keymap.set("n", "<leader>lh", "<cmd>ClangdSwitchSourceHeader<cr>", { buffer = bufnr, desc = "Switch Header/Source" })
+  end
+
+  -- vim-illuminate attaches automatically via providers (lua/user/illuminate.lua)
 end
 
 return M

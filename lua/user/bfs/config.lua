@@ -1,6 +1,8 @@
 M = {}
 
-local ui = vim.api.nvim_list_uis()[1]
+local uis = vim.api.nvim_list_uis()
+local ui_height = (uis and uis[1]) and uis[1].height or (vim.o.lines or 24)
+local ui_width = (uis and uis[1]) and uis[1].width or (vim.o.columns or 80)
 
 M.user_config = {
   width = 40,
@@ -11,8 +13,8 @@ M.user_config = {
   -- TODO: fine a good way to center in window later
   -- relative = "win",
   relative = "editor",
-  row = (ui.height / 2) - (10 / 2),
-  col = (ui.width / 2) - (40 / 2),
+  row = math.floor((ui_height / 2) - (10 / 2)),
+  col = math.floor((ui_width / 2) - (40 / 2)),
 }
 
 M.openOptions = {

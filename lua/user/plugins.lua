@@ -39,6 +39,7 @@ lazy.setup({
         "vhyrro/luarocks.nvim",
         priority = 1000, -- We'd like this plugin to load first out of the rest
         config = true, -- This automatically runs `require("luarocks-nvim").setup()`
+        enabled = false,
     },
   {
     "numToStr/Comment.nvim",
@@ -120,6 +121,11 @@ lazy.setup({
     lazy = false,
     priority = 1000, -- make sure to load this before all the other start plugins
   },
+  {
+    "rebelot/kanagawa.nvim",
+    lazy = false,
+    priority = 1000,
+  },
 
   -- Color
   { "NvChad/nvim-colorizer.lua" },
@@ -134,10 +140,10 @@ lazy.setup({
   { "rcarriga/nvim-notify" },
   { "roobert/search-replace.nvim" },
   {
-    "folke/persistence.nvim",
-    event = "BufReadPre", -- this will only start session saving when an actual file was opened
+    "rmagatti/auto-session",
+    lazy = false,
   },
-  { "nvim-neorg/neorg" },
+  { "nvim-neorg/neorg", enabled = false },
   {
     "kylechui/nvim-surround",
     event = "VeryLazy",
@@ -184,7 +190,7 @@ lazy.setup({
   { "neovim/nvim-lspconfig", lazy = true }, -- enable LSP
   { "williamboman/mason.nvim", lazy = true }, -- simple to use language server installer
   { "williamboman/mason-lspconfig.nvim", lazy = true },
-  { "jose-elias-alvarez/null-ls.nvim", lazy = true }, -- for formatters and linters
+  { "nvimtools/none-ls.nvim", lazy = true }, -- for formatters and linters
   {
     "j-hui/fidget.nvim",
     branch = "legacy",
@@ -201,7 +207,13 @@ lazy.setup({
 
   -- Telescope
   { "nvim-telescope/telescope.nvim" },
-  { "nvim-telescope/telescope-fzf-native.nvim", build = "make" },
+  {
+    "nvim-telescope/telescope-fzf-native.nvim",
+    build = vim.fn.has("win32") == 1
+        and "cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release -G Ninja && cmake --build build --config Release"
+      or "make",
+    enabled = vim.fn.executable("cmake") == 1 or vim.fn.executable("make") == 1,
+  },
 
   -- Treesitter
   { "nvim-treesitter/nvim-treesitter" },
@@ -227,7 +239,8 @@ lazy.setup({
 
   -- Motion
   {
-    "phaazon/hop.nvim",
+    "smoka7/hop.nvim",
+    version = "*",
     event = "BufRead",
   },
 
@@ -246,5 +259,14 @@ lazy.setup({
       require "user.rust-tools"
     end,
     ft = { "rust", "rs" },
+  },
+
+  -- Competitive Programming
+  {
+    "xeluxee/competitest.nvim",
+    dependencies = "MunifTanjim/nui.nvim",
+    config = function()
+      require "user.competitest"
+    end,
   },
 }, opts)
