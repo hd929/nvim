@@ -269,4 +269,14 @@ lazy.setup({
       require "user.competitest"
     end,
   },
+  -- OpenCode (AI Coding Agent / Vibe Coding)
+  {
+    "nickjvandyke/opencode.nvim",
+    dependencies = {
+      "stevearc/dressing.nvim",
+    },
+    config = function()
+      require "user.opencode"
+    end,
+  },
 }, opts)

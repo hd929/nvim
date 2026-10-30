@@ -54,6 +54,17 @@ local mappings = {
   ["w"] = { "<cmd>w!<CR>", "Save" },
   ["/"] = { '<cmd>lua require("Comment.api").toggle.linewise.current()<CR>', "Comment" },
   ["q"] = { "<cmd>q!<CR>", "Quit" },
+  a = {
+    name = "AI / OpenCode",
+    o = { "<cmd>lua _OPENCODE_TOGGLE()<cr>", "OpenCode TUI" },
+    a = { '<cmd>lua require("opencode").ask("@this: ")<cr>', "Ask OpenCode" },
+    s = { '<cmd>lua require("opencode").select()<cr>', "Select Action" },
+    e = { '<cmd>lua require("opencode").ask("Explain @this and its context")<cr>', "Explain Code" },
+    f = { '<cmd>lua require("opencode").ask("Fix @diagnostics in @this")<cr>', "Fix Diagnostics" },
+    d = { '<cmd>lua require("opencode").ask("Add comments documenting @this")<cr>', "Document Code" },
+    t = { '<cmd>lua require("opencode").ask("Add comprehensive tests for @this")<cr>', "Add Tests" },
+    r = { "<cmd>checktime<cr>", "Reload Buffers" },
+  },
   c = {
     name = "CompetiTest",
     r = { "<cmd>CompetiTest run<cr>", "Run Tests" },
@@ -155,6 +166,7 @@ local mappings = {
 
   t = {
     name = "Terminal",
+    o = { "<cmd>lua _OPENCODE_TOGGLE()<cr>", "OpenCode" },
     n = { "<cmd>lua _NODE_TOGGLE()<cr>", "Node" },
     u = { "<cmd>lua _NCDU_TOGGLE()<cr>", "NCDU" },
     t = { "<cmd>lua _HTOP_TOGGLE()<cr>", "Htop" },
@@ -212,6 +224,14 @@ local vopts = {
 
 local vmappings = {
   ["/"] = { '<ESC><CMD>lua require("Comment.api").toggle.linewise(vim.fn.visualmode())<CR>', "Comment" },
+  a = {
+    name = "AI / OpenCode",
+    a = { '<cmd>lua require("opencode").ask("@this: ")<cr>', "Ask Selection" },
+    s = { '<cmd>lua require("opencode").select()<cr>', "Select Action" },
+    e = { '<cmd>lua require("opencode").ask("Explain @this and its context")<cr>', "Explain Selection" },
+    f = { '<cmd>lua require("opencode").ask("Refactor and optimize @this")<cr>', "Refactor/Optimize" },
+    t = { '<cmd>lua require("opencode").ask("Add unit tests for @this")<cr>', "Add Tests" },
+  },
   -- s = { "<esc><cmd>'<,'>SnipRun<cr>", "Run range" },
   -- z = { "<cmd>TZNarrow<cr>", "Narrow" },
 }
