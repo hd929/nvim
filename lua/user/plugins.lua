@@ -6,7 +6,7 @@ if not vim.loop.fs_stat(lazypath) then
     "clone",
     "--filter=blob:none",
     "https://github.com/folke/lazy.nvim.git",
-    "--branch=stable", -- latest stable release
+    "--branch=stable",
     lazypath,
   }
 end
@@ -18,15 +18,6 @@ local opts = {
   },
 }
 
--- Autocommand that reloads neovim whenever you save the plugins.lua file
---vim.cmd([[
---augroup packer_user_config
---autocmd!
---autocmd BufWritePost plugins.lua source <afile> | PackerSync
---augroup end
---]])
-
--- Use a protected call so we don't error out on first use
 local status_ok, lazy = pcall(require, "lazy")
 if not status_ok then
   return
@@ -34,247 +25,361 @@ end
 
 lazy.setup({
   { "folke/lazy.nvim", tag = "stable" },
-  { "nvim-lua/plenary.nvim" }, -- Useful lua functions used by lots of plugins
+  { "nvim-lua/plenary.nvim", lazy = true },
+
+  -- Modern Swiss Army Knife (Dashboard, Notifier, Input, Picker, Scroll, Words, Lazygit)
   {
-        "vhyrro/luarocks.nvim",
-        priority = 1000, -- We'd like this plugin to load first out of the rest
-        config = true, -- This automatically runs `require("luarocks-nvim").setup()`
-        enabled = false,
-    },
-  {
-    "numToStr/Comment.nvim",
-    keys = { { "gc", mode = { "n", "v" } }, { "gb", mode = { "n", "v" } } },
-    event = "User FileOpened",
+    "folke/snacks.nvim",
+    priority = 1000,
+    lazy = false,
+    config = function()
+      require "user.snacks"
+    end,
   },
-  { "JoosepAlviste/nvim-ts-context-commentstring", lazy = true },
-  { "kyazdani42/nvim-web-devicons", lazy = true },
+
+  -- Colorschemes (Kanagawa loaded first; others lazy-loaded)
+  {
+    "rebelot/kanagawa.nvim",
+    lazy = false,
+    priority = 1000,
+    config = function()
+      require "user.colorscheme"
+    end,
+  },
+  { "folke/tokyonight.nvim", lazy = true },
+  { "lunarvim/darkplus.nvim", lazy = true },
+  {
+    "svrana/NeoSolarized.nvim",
+    lazy = true,
+    dependencies = { "tjdevries/colorbuddy.nvim" },
+  },
+  { "navarasu/onedark.nvim", lazy = true },
+  { "neanias/everforest-nvim", lazy = true },
+
+  -- UI & Layout
+  {
+    "kyazdani42/nvim-web-devicons",
+    lazy = true,
+    config = function()
+      require "user.nvim-webdev-icons"
+    end,
+  },
   {
     "akinsho/bufferline.nvim",
-    event = "User FileOpened",
-    enabled = true,
+    event = { "BufReadPost", "BufNewFile" },
+    config = function()
+      require "user.bufferline"
+    end,
   },
-  { "moll/vim-bbye" },
   {
     "nvim-lualine/lualine.nvim",
-    event = "VimEnter",
+    event = "VeryLazy",
+    config = function()
+      require "user.lualine"
+    end,
   },
   {
     "akinsho/toggleterm.nvim",
     event = "VeryLazy",
+    config = function()
+      require "user.toggleterm"
+    end,
   },
   {
     "ahmedkhalf/project.nvim",
-    event = "VimEnter",
+    event = "VeryLazy",
+    config = function()
+      require "user.project"
+    end,
   },
-  { "lewis6991/impatient.nvim" },
-  { "lukas-reineke/indent-blankline.nvim" },
   {
-    "goolord/alpha-nvim",
-    event = "VimEnter",
+    "lukas-reineke/indent-blankline.nvim",
+    event = { "BufReadPost", "BufNewFile" },
+    config = function()
+      require "user.indentline"
+    end,
   },
-  { "folke/which-key.nvim", event = "VeryLazy" },
-  { "karb94/neoscroll.nvim" },
-  { "folke/zen-mode.nvim" },
-  { "nacro90/numb.nvim" },
+  {
+    "folke/which-key.nvim",
+    event = "VeryLazy",
+    config = function()
+      require "user.whichkey"
+    end,
+  },
+  {
+    "folke/zen-mode.nvim",
+    cmd = { "ZenMode" },
+    config = function()
+      require "user.zen-mode"
+    end,
+  },
+  {
+    "nacro90/numb.nvim",
+    event = "VeryLazy",
+    config = function()
+      require "user.numb"
+    end,
+  },
   {
     "sindrets/diffview.nvim",
-    event = "BufRead",
+    cmd = { "DiffviewOpen", "DiffviewClose", "DiffviewToggleFiles", "DiffviewFocusFiles" },
   },
 
-  -- File Explorer
+  -- File Explorers
   {
     "nvim-tree/nvim-tree.lua",
-    event = "User DirOpened",
     cmd = { "NvimTreeToggle", "NvimTreeOpen", "NvimTreeFocus", "NvimTreeFindFileToggle" },
     config = function()
       local nvim_tree_config = require "user.nvim-tree"
       require("nvim-tree").setup(nvim_tree_config)
     end,
   },
-  { "tamago324/lir.nvim", event = "User DirOpened" },
-
-  -- Colorschemes
   {
-    "folke/tokyonight.nvim",
-    lazy = false,
-    priority = 1000,
-  },
-  {
-    "lunarvim/darkplus.nvim",
-    lazy = false,
-    priority = 1000,
-  },
-  {
-    "folke/todo-comments.nvim",
-    event = "BufRead",
-    priority = 1000,
-  },
-  {
-    "svrana/NeoSolarized.nvim",
-    lazy = false,
-    dependencies = { "tjdevries/colorbuddy.nvim" },
-  },
-  { "navarasu/onedark.nvim" },
-  {
-    "neanias/everforest-nvim",
-    version = false,
-    lazy = false,
-    priority = 1000, -- make sure to load this before all the other start plugins
-  },
-  {
-    "rebelot/kanagawa.nvim",
-    lazy = false,
-    priority = 1000,
+    "stevearc/oil.nvim",
+    keys = {
+      { "-", "<cmd>Oil --float<cr>", desc = "Open parent directory in floating Oil" },
+    },
+    config = function()
+      require "user.oil"
+    end,
   },
 
-  -- Color
-  { "NvChad/nvim-colorizer.lua" },
-  -- { "nvim-colortils/colortils.nvim" },
-
-  -- Utility
+  -- Color & Utility
   {
-    "stevearc/dressing.nvim",
+    "NvChad/nvim-colorizer.lua",
+    event = { "BufReadPost", "BufNewFile" },
+    config = function()
+      require "user.colorizer"
+    end,
+  },
+  {
+    "roobert/search-replace.nvim",
     event = "VeryLazy",
-    lazy = true,
+    config = function()
+      require "user.search-replace"
+    end,
   },
-  { "rcarriga/nvim-notify" },
-  { "roobert/search-replace.nvim" },
   {
     "rmagatti/auto-session",
     lazy = false,
+    config = function()
+      require "user.auto-session"
+    end,
   },
-  { "nvim-neorg/neorg", enabled = false },
   {
     "kylechui/nvim-surround",
     event = "VeryLazy",
-  },
-
-  {
-    "ghillb/cybu.nvim",
-    event = "User FileOpened",
-    lazy = true,
-    enabled = false,
+    config = function()
+      require "user.surround"
+    end,
   },
   {
     "rest-nvim/rest.nvim",
     tag = "v1.2.1",
-    requires = { "nvim-lua/plenary.nvim" },
+    cmd = { "RestNvim", "RestNvimPreview", "RestNvimLast" },
+    dependencies = { "nvim-lua/plenary.nvim" },
+    config = function()
+      require "user.rest"
+    end,
   },
 
-  -- Cmp
-  {
-    "hrsh7th/nvim-cmp",
-    lazy = true,
-    event = "InsertEnter",
-  }, -- The completion plugin
-  { "hrsh7th/cmp-buffer", lazy = true }, -- buffer completions
-  { "hrsh7th/cmp-path" }, -- path completions
-  { "saadparwaiz1/cmp_luasnip", lazy = true }, -- snippet completions
-  { "hrsh7th/cmp-nvim-lsp", lazy = true },
-  { "hrsh7th/cmp-nvim-lua", lazy = true },
-  { "roobert/tailwindcss-colorizer-cmp.nvim" },
-
-  -- Snippets
+  -- Modern Completion (saghen/blink.cmp)
   {
     "L3MON4D3/LuaSnip",
-    event = "InsertEnter",
     lazy = true,
-  }, --snippet engine
+  },
   {
     "rafamadriz/friendly-snippets",
-    event = "InsertEnter",
     lazy = true,
-  }, -- a bunch of snippets to use
+  },
+  {
+    "saghen/blink.cmp",
+    version = "*",
+    event = "InsertEnter",
+    dependencies = {
+      "rafamadriz/friendly-snippets",
+      "L3MON4D3/LuaSnip",
+    },
+    config = function()
+      require "user.blink"
+    end,
+  },
 
-  -- LSP
-  { "neovim/nvim-lspconfig", lazy = true }, -- enable LSP
-  { "williamboman/mason.nvim", lazy = true }, -- simple to use language server installer
-  { "williamboman/mason-lspconfig.nvim", lazy = true },
-  { "nvimtools/none-ls.nvim", lazy = true }, -- for formatters and linters
+  -- LSP & Formatting
+  {
+    "neovim/nvim-lspconfig",
+    event = { "BufReadPre", "BufNewFile" },
+    dependencies = {
+      "williamboman/mason.nvim",
+      "williamboman/mason-lspconfig.nvim",
+    },
+    config = function()
+      require "user.lsp"
+    end,
+  },
+  {
+    "williamboman/mason.nvim",
+    cmd = { "Mason", "MasonInstall", "MasonUninstall", "MasonUpdate" },
+    lazy = true,
+  },
+  {
+    "williamboman/mason-lspconfig.nvim",
+    lazy = true,
+  },
+  {
+    "stevearc/conform.nvim",
+    event = { "BufWritePre" },
+    cmd = { "ConformInfo", "Format" },
+    config = function()
+      require "user.conform"
+    end,
+  },
   {
     "j-hui/fidget.nvim",
     branch = "legacy",
     event = "LspAttach",
     opts = {},
     lazy = true,
-    enabled = true,
   },
   { "lvimuser/lsp-inlayhints.nvim", lazy = true },
-  { "RRethy/vim-illuminate", event = "User FileOpened" },
-  { "SmiteshP/nvim-navic", event = "User FileOpened" },
-  -- { "Exafunction/codeium.vim" },
-  { "ray-x/lsp_signature.nvim", opts = {} },
+  {
+    "SmiteshP/nvim-navic",
+    lazy = true,
+    config = function()
+      require "user.navic"
+    end,
+  },
+  {
+    "ray-x/lsp_signature.nvim",
+    event = "InsertEnter",
+    opts = {},
+  },
 
   -- Telescope
-  { "nvim-telescope/telescope.nvim" },
+  {
+    "nvim-telescope/telescope.nvim",
+    cmd = "Telescope",
+    config = function()
+      require "user.telescope"
+    end,
+  },
   {
     "nvim-telescope/telescope-fzf-native.nvim",
     build = vim.fn.has("win32") == 1
         and "cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release -G Ninja && cmake --build build --config Release"
       or "make",
+    lazy = true,
     enabled = vim.fn.executable("cmake") == 1 or vim.fn.executable("make") == 1,
   },
 
   -- Treesitter
-  { "nvim-treesitter/nvim-treesitter" },
-  { "windwp/nvim-ts-autotag" },
-  { "windwp/nvim-autopairs" }, -- Autopairs, integrates with both cmp and treesitter
-
-  -- Git
-  { "lewis6991/gitsigns.nvim" },
-
-  -- Editing Support
-  { "monaqa/dial.nvim" },
-
-  -- Code Runner
-  { "is0n/jaq-nvim" },
-
   {
-    "folke/noice.nvim",
-    event = "VeryLazy",
-    dependencies = {
-      "MunifTanjim/nui.nvim",
+    "nvim-treesitter/nvim-treesitter",
+    event = { "BufReadPost", "BufNewFile" },
+    config = function()
+      require "user.treesitter"
+    end,
+  },
+  {
+    "windwp/nvim-ts-autotag",
+    event = { "BufReadPost", "BufNewFile" },
+    config = function()
+      require "user.nvim-ts-autotag"
+    end,
+  },
+  {
+    "windwp/nvim-autopairs",
+    event = "InsertEnter",
+    config = function()
+      require "user.autopairs"
+    end,
+  },
+
+  -- Git & Comments
+  {
+    "numToStr/Comment.nvim",
+    keys = { { "gc", mode = { "n", "v" } }, { "gb", mode = { "n", "v" } } },
+    event = { "BufReadPost", "BufNewFile" },
+    config = function()
+      require "user.comment"
+    end,
+  },
+  { "JoosepAlviste/nvim-ts-context-commentstring", lazy = true },
+  {
+    "lewis6991/gitsigns.nvim",
+    event = { "BufReadPost", "BufNewFile" },
+    config = function()
+      require "user.gitsigns"
+    end,
+  },
+  {
+    "folke/todo-comments.nvim",
+    event = { "BufReadPost", "BufNewFile" },
+    config = function()
+      require "user.todo-comments"
+    end,
+  },
+
+  -- Editing Support & Motions
+  {
+    "monaqa/dial.nvim",
+    keys = {
+      { "<C-a>", mode = { "n", "v" } },
+      { "<C-x>", mode = { "n", "v" } },
     },
+    config = function()
+      require "user.dial"
+    end,
   },
-
-  -- Motion
   {
-    "smoka7/hop.nvim",
-    version = "*",
-    event = "BufRead",
+    "folke/flash.nvim",
+    event = "VeryLazy",
+    config = function()
+      require "user.flash"
+    end,
   },
 
-  -- Clangd/C++/C
+  -- Code Runner & Languages
+  {
+    "is0n/jaq-nvim",
+    cmd = { "Jaq" },
+    config = function()
+      require "user.jaq"
+    end,
+  },
   {
     "cdelledonne/vim-cmake",
+    cmd = {
+      "CMakeGenerate",
+      "CMakeClean",
+      "CMakeBuild",
+      "CMakeInstall",
+      "CMakeRun",
+      "CMakeSelectBuildType",
+      "CMakeSelectTarget",
+      "CMakeOpen",
+    },
   },
-
-  -- Handlebars
-  -- { "mustache/vim-mustache-handlebars" },
-
-  -- Rust
   {
     "simrat39/rust-tools.nvim",
+    ft = { "rust", "rs" },
     config = function()
       require "user.rust-tools"
     end,
-    ft = { "rust", "rs" },
   },
-
-  -- Competitive Programming
   {
     "xeluxee/competitest.nvim",
+    cmd = { "CompetiTest" },
     dependencies = "MunifTanjim/nui.nvim",
     config = function()
       require "user.competitest"
     end,
   },
+
   -- OpenCode (AI Coding Agent / Vibe Coding)
   {
     "nickjvandyke/opencode.nvim",
-    dependencies = {
-      "stevearc/dressing.nvim",
-    },
+    event = "VeryLazy",
     config = function()
       require "user.opencode"
     end,

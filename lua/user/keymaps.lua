@@ -75,11 +75,11 @@ keymap("v", "<C-s>", "<CMD>SearchReplaceWithinVisualSelection<CR>", opts)
 keymap("v", "<C-b>", "<CMD>SearchReplaceWithinVisualSelectionCWord<CR>", opts)
 
 -- Renamer
-keymap("n", "<F2>", '<cmd>lua require("renamer").rename()<cr>', opts)
+keymap("n", "<F2>", "<cmd>lua vim.lsp.buf.rename()<cr>", opts)
 
 -- Custom
 keymap("n", "<C-z>", "<cmd>ZenMode<cr>", opts)
-keymap("n", "-", ":lua require'lir.float'.toggle()<cr>", opts)
+keymap("n", "-", "<cmd>Oil --float<cr>", opts)
 
 -- Fast C/C++ Compile & Run (<F5>)
 local function run_cpp()

@@ -28,6 +28,8 @@ M.winbar_filetype_exclude = {
   "",
 }
 
+local hl_cache = {}
+
 M.get_filename = function()
   local filename = vim.fn.expand "%:t"
   local extension = vim.fn.expand "%:e"
@@ -39,14 +41,15 @@ M.get_filename = function()
 
     local hl_group = "FileIconColor" .. extension
 
-    vim.api.nvim_set_hl(0, hl_group, { fg = file_icon_color })
+    if file_icon_color and not hl_cache[hl_group] then
+      vim.api.nvim_set_hl(0, hl_group, { fg = file_icon_color })
+      hl_cache[hl_group] = true
+    end
+
     if f.isempty(file_icon) then
       file_icon = ""
       file_icon_color = ""
     end
-
-    -- local navic_text = vim.api.nvim_get_hl_by_name("NavicText", true)
-    -- vim.api.nvim_set_hl(0, "Winbar", { fg = navic_text.foreground })
 
     return " " .. "%#" .. hl_group .. "#" .. file_icon .. "%*" .. " " .. "%#Winbar#" .. filename .. "%*"
   end
@@ -120,7 +123,7 @@ M.get_winbar = function()
     end
   end
 
-  if not f.isempty(value) and f.get_buf_option "mod" then
+  if not f.isempty(value) and vim.bo.modified then
     local mod = "%#LspCodeLens#" .. require("user.icons").ui.Circle .. "%*"
     if gps_added then
       value = value .. " " .. mod

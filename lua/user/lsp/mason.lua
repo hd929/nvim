@@ -54,10 +54,5 @@ for _, server in pairs(servers) do
     opts = vim.tbl_deep_extend("force", conf_opts, opts)
   end
 
-  if vim.lsp.config and vim.lsp.enable then
-    vim.lsp.config(server, opts)
-    vim.lsp.enable(server)
-  else
-    lspconfig[server].setup(opts)
-  end
+  lspconfig[server].setup(opts)
 end

@@ -11,5 +11,6 @@ return {
     "--pch-storage=memory",
     "-j=4",
     "--query-driver=**",
+    "--log=error",
   },
 }

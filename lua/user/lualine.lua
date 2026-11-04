@@ -364,7 +364,7 @@ local spaces = {
       space = " "
     end
 
-    local shiftwidth = vim.api.nvim_buf_get_option(0, "shiftwidth")
+    local shiftwidth = vim.bo.shiftwidth
 
     if shiftwidth == nil then
       return ""
@@ -419,24 +419,29 @@ local lanuage_server = {
       end
     end
 
-    -- add formatter
-    local s = require "null-ls.sources"
-    local available_sources = s.get_available(buf_ft)
-    local registered = {}
-    for _, source in ipairs(available_sources) do
-      for method in pairs(source.methods) do
-        registered[method] = registered[method] or {}
-        table.insert(registered[method], source.name)
+    -- add formatter (conform.nvim)
+    local status_conform, conform = pcall(require, "conform")
+    if status_conform then
+      local formatters = conform.list_formatters(0)
+      for _, f in ipairs(formatters) do
+        table.insert(client_names, f.name)
       end
-    end
-
-    local formatter = registered["NULL_LS_FORMATTING"]
-    local linter = registered["NULL_LS_DIAGNOSTICS"]
-    if formatter ~= nil then
-      vim.list_extend(client_names, formatter)
-    end
-    if linter ~= nil then
-      vim.list_extend(client_names, linter)
+    else
+      local status_null_ls, s = pcall(require, "null-ls.sources")
+      if status_null_ls then
+        local available_sources = s.get_available(buf_ft)
+        local registered = {}
+        for _, source in ipairs(available_sources) do
+          for method in pairs(source.methods) do
+            registered[method] = registered[method] or {}
+            table.insert(registered[method], source.name)
+          end
+        end
+        local formatter = registered["NULL_LS_FORMATTING"]
+        if formatter ~= nil then
+          vim.list_extend(client_names, formatter)
+        end
+      end
     end
 
     -- join client names with commas

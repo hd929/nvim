@@ -1,15 +1,21 @@
 local M = {}
 
-local status_cmp_ok, cmp_nvim_lsp = pcall(require, "cmp_nvim_lsp")
-if not status_cmp_ok then
-  return
-end
+vim.lsp.set_log_level("warn")
 
 local icons = require "user.icons"
 
 M.capabilities = vim.lsp.protocol.make_client_capabilities()
 M.capabilities.textDocument.completion.completionItem.snippetSupport = true
-M.capabilities = cmp_nvim_lsp.default_capabilities(M.capabilities)
+
+local status_blink_ok, blink = pcall(require, "blink.cmp")
+if status_blink_ok then
+  M.capabilities = blink.get_lsp_capabilities(M.capabilities)
+else
+  local status_cmp_ok, cmp_nvim_lsp = pcall(require, "cmp_nvim_lsp")
+  if status_cmp_ok then
+    M.capabilities = cmp_nvim_lsp.default_capabilities(M.capabilities)
+  end
+end
 
 M.setup = function()
   local signs = {

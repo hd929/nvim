@@ -1,12 +1,3 @@
-vim.api.nvim_create_autocmd({ "User" }, {
-  pattern = { "AlphaReady" },
-  callback = function()
-    vim.cmd [[
-      set laststatus=0 | autocmd BufUnload <buffer> set laststatus=3
-    ]]
-  end,
-})
-
 vim.api.nvim_create_autocmd({ "FileType" }, {
   pattern = {
     "Jaq",
@@ -16,8 +7,7 @@ vim.api.nvim_create_autocmd({ "FileType" }, {
     "lspinfo",
     "floaterm",
     "spectre_panel",
-    "lir",
-    "DressingSelect",
+    "oil",
     "tsplayground",
     "Markdown",
   },
@@ -49,7 +39,8 @@ vim.api.nvim_create_autocmd({ "BufWinEnter" }, {
 
 vim.api.nvim_create_autocmd({ "TextYankPost" }, {
   callback = function()
-    vim.highlight.on_yank { higroup = "Visual", timeout = 200 }
+    local on_yank = vim.hl and vim.hl.on_yank or vim.highlight.on_yank
+    on_yank { higroup = "Visual", timeout = 200 }
   end,
 })
 
@@ -60,15 +51,16 @@ vim.api.nvim_create_autocmd({ "CursorHold" }, {
       return
     end
     if luasnip.expand_or_jumpable() then
-      -- ask maintainer for option to make this silent
-      -- luasnip.unlink_current()
       vim.cmd [[silent! lua require("luasnip").unlink_current()]]
     end
   end,
 })
 
--- Autoformat
--- augroup _lsp
---   autocmd!
---   autocmd BufWritePre * lua vim.lsp.buf.formatting()
--- augroup end
+-- Load winbar after first buffer read
+vim.api.nvim_create_autocmd({ "BufReadPost", "BufNewFile" }, {
+  group = vim.api.nvim_create_augroup("UserWinbarInit", { clear = true }),
+  callback = function()
+    require "user.winbar"
+  end,
+  once = true,
+})

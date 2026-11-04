@@ -6,8 +6,20 @@ end
 bufferline.setup {
   options = {
     numbers = "none", -- | "ordinal" | "buffer_id" | "both" | function({ ordinal, id, lower, raise }): string,
-    close_command = "Bdelete! %d", -- can be a string | function, see "Mouse actions"
-    right_mouse_command = "Bdelete! %d", -- can be a string | function, see "Mouse actions"
+    close_command = function(n)
+      if _G.Snacks and _G.Snacks.bufdelete then
+        Snacks.bufdelete(n)
+      else
+        vim.cmd("bdelete! " .. n)
+      end
+    end,
+    right_mouse_command = function(n)
+      if _G.Snacks and _G.Snacks.bufdelete then
+        Snacks.bufdelete(n)
+      else
+        vim.cmd("bdelete! " .. n)
+      end
+    end,
     left_mouse_command = "buffer %d", -- can be a string | function, see "Mouse actions"
     middle_mouse_command = nil, -- can be a string | function, see "Mouse actions"
     -- NOTE: this plugin is designed with this icon in mind,

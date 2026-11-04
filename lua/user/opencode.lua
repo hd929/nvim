@@ -69,11 +69,19 @@ vim.g.opencode_opts = {
 }
 
 -- Fast shortcuts for in-editor OpenCode vibe coding
-vim.keymap.set({ "n", "x" }, "<C-a>", function()
+vim.keymap.set({ "n", "x" }, "<leader>aa", function()
   opencode.ask("@this: ")
 end, { noremap = true, silent = true, desc = "Ask OpenCode" })
 
-vim.keymap.set({ "n", "x" }, "<C-x>", function()
+vim.keymap.set({ "n", "x" }, "<leader>as", function()
+  opencode.select()
+end, { noremap = true, silent = true, desc = "Select OpenCode Action" })
+
+vim.keymap.set({ "n", "x" }, "<M-a>", function()
+  opencode.ask("@this: ")
+end, { noremap = true, silent = true, desc = "Ask OpenCode" })
+
+vim.keymap.set({ "n", "x" }, "<M-x>", function()
   opencode.select()
 end, { noremap = true, silent = true, desc = "Select OpenCode Action" })
 
