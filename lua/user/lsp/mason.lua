@@ -34,9 +34,15 @@ require("mason-lspconfig").setup {
   automatic_installation = true,
 }
 
-local lspconfig_status_ok, lspconfig = pcall(require, "lspconfig")
-if not lspconfig_status_ok then
-  return
+local has_native_lsp_config = vim.fn.has("nvim-0.11") == 1 and vim.lsp.config and vim.lsp.enable
+local lspconfig = nil
+if not has_native_lsp_config then
+  local ok, mod = pcall(require, "lspconfig")
+  if ok then
+    lspconfig = mod
+  else
+    return
+  end
 end
 
 local opts = {}
@@ -54,11 +60,10 @@ for _, server in pairs(servers) do
     opts = vim.tbl_deep_extend("force", conf_opts, opts)
   end
 
-  local has_native_lsp_config = vim.fn.has("nvim-0.11") == 1 and vim.lsp.config and vim.lsp.enable
   if has_native_lsp_config then
     vim.lsp.config[server] = opts
     vim.lsp.enable(server)
-  else
+  elseif lspconfig then
     lspconfig[server].setup(opts)
   end
 end
