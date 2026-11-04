@@ -1,6 +1,10 @@
 local M = {}
 
-vim.lsp.set_log_level("warn")
+if vim.lsp.log and vim.lsp.log.set_level then
+  vim.lsp.log.set_level(vim.log.levels.WARN)
+elseif vim.lsp.set_log_level then
+  vim.lsp.set_log_level("warn")
+end
 
 local icons = require "user.icons"
 

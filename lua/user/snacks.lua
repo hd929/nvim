@@ -18,12 +18,12 @@ snacks.setup {
 \ \_\ \_\ \____\ \____/\ \___/  \ \_\ \_\ \_\ \_\
  \/_/\/_/\/____/\/___/  \/__/    \/_/\/_/\/_/\/_/]],
       keys = {
-        { icon = icons.documents.File .. " ", key = "f", desc = "Find File", action = ":Telescope find_files" },
+        { icon = icons.documents.File .. " ", key = "f", desc = "Find File", action = ":lua Snacks.dashboard.pick('files')" },
         { icon = icons.ui.NewFile .. " ", key = "e", desc = "New File", action = ":ene | startinsert" },
         { icon = icons.git.Repo .. " ", key = "p", desc = "Find Project", action = ":Telescope projects" },
-        { icon = icons.ui.History .. " ", key = "r", desc = "Recent Files", action = ":Telescope oldfiles" },
-        { icon = icons.ui.List .. " ", key = "t", desc = "Find Text", action = ":Telescope live_grep" },
-        { icon = icons.ui.Gear .. " ", key = "c", desc = "Configuration", action = ":e $MYVIMRC" },
+        { icon = icons.ui.History .. " ", key = "r", desc = "Recent Files", action = ":lua Snacks.dashboard.pick('oldfiles')" },
+        { icon = icons.ui.List .. " ", key = "t", desc = "Find Text", action = ":lua Snacks.dashboard.pick('live_grep')" },
+        { icon = icons.ui.Gear .. " ", key = "c", desc = "Configuration", action = ":lua Snacks.dashboard.pick('files', { cwd = vim.fn.stdpath('config') })" },
         { icon = icons.ui.SignOut .. " ", key = "q", desc = "Quit", action = ":qa" },
       },
     },
