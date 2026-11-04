@@ -4,7 +4,19 @@ if not status_ok then
 end
 
 colorizer.setup {
-  filetypes = { "*" },
+  filetypes = {
+    "css",
+    "scss",
+    "html",
+    "javascript",
+    "typescript",
+    "javascriptreact",
+    "typescriptreact",
+    "vue",
+    "svelte",
+    "lua",
+    "json",
+  },
 
   user_default_options = {
     RGB = true, -- #RGB hex codes

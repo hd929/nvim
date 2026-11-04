@@ -508,7 +508,7 @@ lualine.setup {
   sections = {
     lualine_a = { left_pad, mode, branch, right_pad },
     lualine_b = { left_pad_alt, diagnostics, right_pad_alt },
-    lualine_c = { current_signature },
+    lualine_c = {},
     -- lualine_x = { diff, spaces, "encoding", filetype },
     -- lualine_x = { diff, lanuage_server, spaces, filetype },
     -- lualine_x = { lanuage_server, spaces, filetype },

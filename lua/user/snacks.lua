@@ -46,7 +46,7 @@ snacks.setup {
   },
   input = { enabled = true },
   picker = { enabled = true },
-  scroll = { enabled = true },
+  scroll = { enabled = false },
   words = { enabled = true },
   lazygit = { enabled = true },
   bufdelete = { enabled = true },
