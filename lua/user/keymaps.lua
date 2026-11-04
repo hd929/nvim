@@ -25,6 +25,10 @@ keymap("n", "<M-j>", "<C-w>j", opts)
 keymap("n", "<M-k>", "<C-w>k", opts)
 keymap("n", "<M-l>", "<C-w>l", opts)
 
+-- Scroll Page Down / Page Up
+keymap("n", "<C-j>", "<PageDown>", opts)
+keymap("n", "<C-k>", "<PageUp>", opts)
+
 -- Resize with arrows
 keymap("n", "<C-Up>", ":resize -2<CR>", opts)
 keymap("n", "<C-Down>", ":resize +2<CR>", opts)
@@ -50,12 +54,20 @@ keymap("i", "kj", "<ESC>", opts)
 keymap("v", "<", "<gv", opts)
 keymap("v", ">", ">gv", opts)
 
+-- Scroll Page Down / Page Up
+keymap("v", "<C-j>", "<PageDown>", opts)
+keymap("v", "<C-k>", "<PageUp>", opts)
+
 -- Move text up and down
 keymap("v", "<M-j>", ":m .+1<CR>==", opts)
 keymap("v", "<M-k>", ":m .-2<CR>==", opts)
 keymap("v", "p", '"_dP', opts)
 
 -- Visual Block --
+-- Scroll Page Down / Page Up
+keymap("x", "<C-j>", "<PageDown>", opts)
+keymap("x", "<C-k>", "<PageUp>", opts)
+
 -- Move text up and down
 keymap("x", "J", ":move '>+1<CR>gv-gv", opts)
 keymap("x", "K", ":move '<-2<CR>gv-gv", opts)
@@ -98,4 +110,3 @@ local function run_cpp()
 end
 
 vim.keymap.set("n", "<F5>", run_cpp, { noremap = true, silent = true, desc = "Compile & Run C++" })
-
