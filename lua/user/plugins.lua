@@ -228,7 +228,7 @@ lazy.setup({
   },
   {
     "stevearc/conform.nvim",
-    event = { "BufWritePre" },
+    event = { "BufReadPre", "BufNewFile" },
     cmd = { "ConformInfo", "Format" },
     config = function()
       require "user.conform"
