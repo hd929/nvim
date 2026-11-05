@@ -19,40 +19,17 @@ return {
   hijack_directories = {
     enable = false,
   },
-  -- update_to_buf_dir = {
-  --   enable = false,
-  -- },
-  -- disable_netrw = true,
-  -- hijack_netrw = true,
-  -- open_on_setup = false,
-  -- ignore_ft_on_setup = {
-  --   "startify",
-  --   "dashboard",
-  --   "alpha",
-  -- },
   filters = {
     custom = { ".git" },
-  --   exclude = { ".gitignore" },
   },
-  -- auto_close = true,
-  -- open_on_tab = false,
-  -- hijack_cursor = false,
-  update_cwd = true,
-  -- update_to_buf_dir = {
-  --   enable = true,
-  --   auto_open = true,
-  -- },
-  -- --   error
-  -- --   info
-  -- --   question
-  -- --   warning
-  -- --   lightbulb
+  sync_root_with_cwd = true,
+  respect_buf_cwd = true,
   renderer = {
     add_trailing = false,
     group_empty = false,
     highlight_git = false,
     highlight_opened_files = "none",
-    root_folder_modifier = ":t",
+    root_folder_label = ":t",
     indent_markers = {
       enable = false,
       icons = {
@@ -108,17 +85,11 @@ return {
   },
   update_focused_file = {
     enable = true,
-    update_cwd = true,
-    ignore_list = {},
+    update_root = {
+      enable = true,
+      ignore_list = {},
+    },
   },
-  -- system_open = {
-  --   cmd = nil,
-  --   args = {},
-  -- },
-  -- filters = {
-  --   dotfiles = false,
-  --   custom = {},
-  -- },
   git = {
     enable = true,
     ignore = true,
@@ -127,7 +98,6 @@ return {
   view = {
     width = 30,
     side = "left",
-    -- auto_resize = true,
     number = false,
     relativenumber = false,
   },

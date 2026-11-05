@@ -6,6 +6,23 @@ if vim.fn.has "win32" == 1 then
   vim.env.CC = "gcc"
 end
 
+-- Fix Neovim 0.12 Nightly race condition where plugins delete already-cleaned augroups (E367: No such group "--Deleted--")
+local orig_del_augroup_by_id = vim.api.nvim_del_augroup_by_id
+vim.api.nvim_del_augroup_by_id = function(id)
+  local ok, err = pcall(orig_del_augroup_by_id, id)
+  if not ok and not (type(err) == "string" and err:match "E367") then
+    error(err)
+  end
+end
+
+local orig_del_augroup_by_name = vim.api.nvim_del_augroup_by_name
+vim.api.nvim_del_augroup_by_name = function(name)
+  local ok, err = pcall(orig_del_augroup_by_name, name)
+  if not ok and not (type(err) == "string" and err:match "E367") then
+    error(err)
+  end
+end
+
 require "user.options"
 require "user.keymaps"
 require "user.autocommands"
