@@ -2,9 +2,13 @@ local status_ok, opencode = pcall(require, "opencode")
 
 -- Enable autoread so external edits made by OpenCode are picked up
 vim.o.autoread = true
-vim.api.nvim_create_autocmd({ "FocusGained", "BufEnter", "CursorHold" }, {
+vim.api.nvim_create_autocmd({ "FocusGained", "BufEnter" }, {
   pattern = "*",
-  command = "checktime",
+  callback = function()
+    if vim.fn.getcmdwintype() == "" then
+      pcall(vim.cmd, "checktime")
+    end
+  end,
 })
 
 -- Setup ToggleTerm floating terminal for OpenCode TUI
@@ -29,7 +33,9 @@ if toggleterm_ok then
       vim.api.nvim_buf_set_keymap(term.bufnr, "t", "<m-o>", "<cmd>lua _OPENCODE_TOGGLE()<cr>", { noremap = true, silent = true })
     end,
     on_close = function(_)
-      vim.cmd "checktime"
+      if vim.fn.getcmdwintype() == "" then
+        pcall(vim.cmd, "checktime")
+      end
     end,
     count = 88,
   }
