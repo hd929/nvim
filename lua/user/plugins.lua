@@ -16,6 +16,25 @@ local opts = {
   ui = {
     border = "rounded",
   },
+  performance = {
+    cache = {
+      enabled = true,
+    },
+    reset_packpath = true,
+    rtp = {
+      reset = true,
+      disabled_plugins = {
+        "gzip",
+        "matchit",
+        "matchparen",
+        "netrwPlugin",
+        "tarPlugin",
+        "tohtml",
+        "tutor",
+        "zipPlugin",
+      },
+    },
+  },
 }
 
 local status_ok, lazy = pcall(require, "lazy")

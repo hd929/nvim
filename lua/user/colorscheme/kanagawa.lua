@@ -4,7 +4,7 @@ if not status_ok then
 end
 
 kanagawa.setup {
-  compile = false,
+  compile = true,
   undercurl = true,
   commentStyle = { italic = true },
   functionStyle = {},
